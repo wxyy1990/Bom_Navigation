@@ -86,7 +86,7 @@ public class Util implements wt.method.RemoteAccess{
         try {
             PropertyResourceBundle prBundle=(PropertyResourceBundle)PropertyResourceBundle.getBundle(propertyFile);
             byte[] tempvalue = null;
-
+		//test branch
             tempvalue = propKey.getBytes("GB2312");
             propKey = new String(tempvalue,"ISO-8859-1");
             tempvalue = prBundle.getString(propKey).getBytes("ISO-8859-1");
