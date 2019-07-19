@@ -1,0 +1,70 @@
+一.增加一、二级菜单链接
+D:\AVIDM4.0\AVIDM_HOME\menuInfo.xml下追加如下内容
+
+ <menu id="BOMID" name="BOM导航">
+	           <subMenu id="BOMindexID" default="IndexBOM">
+	                 <menu id="IndexBOM" name="BOM导航">
+					     <leftURL id="BOMStructor" url="/plm/ext/c504/part/selectBOMShow.jsp" frameName="leftFrame"></leftURL>
+			             <rightURL  id="BOMDetail" url="/plm/ext/c504/part/BOMDetail.jsp" frameName="mainFrame"></rightURL>
+					 </menu>
+	           </subMenu>
+	</menu>
+
+二、在文档上增加下载连接
+1.在D:\ptc\Windchill_9.1\Windchill\codebase\config\actions\下custom-actionModels.xml查找<model name="relatedDocumentDescribesToolBar">是否存在，
+ 若其不存在，则追加如下：
+
+   <model name="relatedDocumentDescribesToolBar">
+      <action name="related_delete_described"                  type="part"/>        <!-- Remove Described By Document -->
+      <action name="related_copy_references"                   type="part"/>        <!-- Copy to Clipboard -->
+      <action name="separator"                                 type="separator"/>   <!-- ===================================== -->
+      <action name="related_paste_select_described"            type="part"/>        <!-- Paste Select Described By Document from Clipboard -->
+      <action name="related_paste_described"                   type="part"/>        <!-- Paste Described By Document from Clipboard -->
+      <action name="createDescribedDocument"  type="avidm"/>    <!-- Create and associate a described by document -->
+      <action name="related_add_described"                     type="part"/>        <!-- Add Described By Document -->
+
+	  <action name="downLoadDoc"                    type="CPart"/> 
+   </model> 
+   
+   若其存在，则追加如下内容:
+    <action name="downLoadDoc"                    type="CPart"/> 
+     
+   查找<model model name="third_level_nav_part" defaultActionName="relatedDocumentsDocuments" defaultActionType="document">，
+   若不存在则进行追加如下内容
+  <model name="third_level_nav_part" defaultActionName="relatedDocumentsDocuments" defaultActionType="document">
+      <action name="relatedPartsDocuments" type="part"/>
+	  <action name="relatedPartsCADDocuments" type="part"/>
+      <action name="productStructure"  type="object"/>      <!-- Structure -->
+      <submodel name="general"/>                            <!-- General -->
+      <submodel name="relatedItems"/>                       <!-- Related Objects -->
+      <submodel name="history"/>                            <!-- History -->
+   </model>  
+   若存在，则追加如下内容：
+    <action name="relatedPartsDocuments" type="part"/>
+	<action name="relatedPartsCADDocuments" type="part"/>
+	
+
+2.在D:\ptc\Windchill_9.1\Windchill\codebase\config\actions\下custom-actions.xml追加如下代码
+  
+    <objecttype name="CPart" class="" resourceBundle="ext.c504.part.EBOMManagementRB">
+		<action name="downLoadDoc">
+            <command  windowType="popup" url="plm/ext/c504/part/downLoadDoc.jsp" />
+        </action>
+	</objecttype>
+
+3.修改%Windchill_Home%\src\com\ptc\windchill\enterprise\part下的partResource_zh_CN.rbInfo
+part.relatedPartsDocuments.description.value=普通文档
+part.relatedPartsDocuments.description.comment=Related Items 3rd level nav Part Info page Documents
+part.relatedPartsCADDocuments.description.value=PRO/E文档
+part.relatedPartsCADDocuments.description.comment=Related Items 3rd level nav Part Info page CAD Documents
+
+在运行环境中执行命令：
+ResourceBuild com.ptc.windchill.enterprise.part.partResource	
+	
+
+三.将Windchill\src\ext\c504\part下Java文件编译生成class部署到%Windchill_HOME%/codebase/ext下相应位置；
+四.将Windchill\codebase\plm\ext\c504\part下的JSP文件部署到到%Windchill_HOME%/codebase/plm/ext下相应位置；
+   
+五.重启服务器
+
+   

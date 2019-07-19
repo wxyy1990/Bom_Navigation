@@ -1,0 +1,20 @@
+1.将对应的class和Jsp部署到系统相应位置
+2.将db/SelectedPDMLinkProductInfo.sql导入数据库中
+3.修改D:\ptc\Windchill_9.1\Windchill\codebase\templates\enterprise\part\structure下的ProductStructureBrowser.html和ProductStructureBrowser_zh_CN.html
+将方法
+function launchOnTopWindow(action)
+{
+ //if (self != top)
+   //{
+       top.location.href = action;
+   //}
+}
+改为
+function launchOnTopWindow(action)
+{
+ //if (self != top)
+   //{
+       //top.location.href = action;
+	   parent.location = action;
+   //}
+}
