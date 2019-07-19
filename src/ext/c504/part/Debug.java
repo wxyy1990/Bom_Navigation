@@ -88,7 +88,7 @@ public class Debug {
 				+ "*****************************************";
 		String s2 = ste[1].getFileName() + "." + ste[1].getLineNumber() + ": "
 				+ getTime();
-
+		//test info !
 		println(s1);
 		println(s2);
 		println(ss.toString());
