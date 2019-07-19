@@ -22,7 +22,7 @@ public class Debug {
 	static final String VERBOSE_KEY = "ext.c504.verbose";
 	static boolean VERBOSE = true;
 	static int verboseCount = 0;
-
+	//TEST COMPARE
 	static {
 		try {
 			WTProperties wtp = WTProperties.getLocalProperties();
