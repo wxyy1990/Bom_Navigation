@@ -1,0 +1,524 @@
+<!--
+  * bcwti
+  *
+  * Copyright (c) 2001-2005 Windchill Technology Inc.
+  * All Rights Reserved.
+  *
+  * This software is the confidential and proprietary information of
+  * Windchill Technology. You shall not disclose such confidential
+  * information  and shall use it only in accordance with the terms
+  * of the license agreement you entered into with Windchill.
+  *
+  * ecwti
+-->
+
+
+<html>
+
+<head>
+<script language=Windchill>
+<!--
+   processSubTemplate action=GetMetaInfo
+-->
+</script>
+<script language=Windchill>
+<!--
+   useProcessorService method=getBaseTag service=com.ptc.core.HTMLtemplateutil.server.processors.UtilProcessorService
+-->
+</script>
+<script language=windchill>
+<!--
+   useProcessorService method=getCSSLink service=com.ptc.core.HTMLtemplateutil.server.processors.UtilProcessorService
+-->
+</script>
+<title>
+  <script language=windchill>
+  <!--
+  useProcessorService method=setMethodContextProperty service=wt.templateutil.processor.DefaultTemplateProcessor preserveFormatting=true
+  getLocalizedMessage resourceKey=DETAILS_FOR resourceClass=wt.part.partResource recurse.param0="objectPropertyValue propertyName=displayIdentity"
+  useProcessorService method=setMethodContextProperty service=wt.templateutil.processor.DefaultTemplateProcessor preserveFormatting=false
+  -->
+  </script>
+</title>
+
+<script language=javascript>
+<!--
+  var pjlLocal=parent.pjlLocal;
+-->
+</script>
+<script language='JavaScript' SRC='templates/htmlcomp/dynamicPopup.js'></script>
+<script language='JavaScript' SRC='templates/enterprise/part/structure/structure.js'></script>
+<link href="templates/enterprise/part/structure/structure.css" type="text/css" rel="stylesheet"/>
+
+<script language=javascript>
+<!--
+    // See 'structure.js' about PSBJSUtil object.
+    var tpLink = null;
+    tpLink = '<script language=windchill>getURLProcessorLink method=processForm action=ChooseConfigSpec config_spec=cs_string class=java.lang.Object</script>';
+    PSBJSUtil.setConfigSpecLink('java.lang.Object', tpLink);
+    tpLink = '<script language=windchill>getURLProcessorLink method=processForm action=ChooseConfigSpec config_spec=cs_string class=wt.part.WTProductInstance2</script>';
+    PSBJSUtil.setConfigSpecLink('wt.part.WTProductInstance2', tpLink);
+    tpLink = '<script language=windchill>getURLProcessorLink method=processForm action=ChooseFilterSpec class=java.lang.Object</script>'
+    PSBJSUtil.setFilterSpecLink('java.lang.Object', tpLink);
+    -->
+</script>
+
+</head>
+
+
+<script language='JavaScript' SRC='netmarkets/javascript/components/wizard.js'></script>
+
+<script language=windchill>
+<!--
+  useProcessorService method=getBodyTag service=com.ptc.windchill.enterprise.part.structure.ProductStructureProcessor onUnloadJavascript=closeChild();
+-->
+</script>
+
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="left" valign="top">
+        <table border="0" name="overhead" width=100%>
+          <tr>
+           <td colspan="2" align="left" valign="bottom">
+              <script language=windchill>
+                <!--
+                outputSpecInfo compid=ProductStructureBrowser jscallbackfunc="submitConfiguration"
+                -->
+              </script>
+            </td>
+            <td align="right">
+              <script language=windchill>
+                <!--
+                outputConfigSpecSelector compid=ProductStructureBrowser jscallbackfunc="submitConfiguration"
+                -->
+              </script>
+            </td>
+          </tr>
+          <tr>
+            <td align="left" valign="baseline">
+              <script language=windchill>
+                <!--
+                outputSupplierContextSelector
+                -->
+              </script>
+            </td>
+            <td align="left" valign="baseline">
+              <script language=windchill>
+                <!--
+                outputReportSelector
+                -->
+              </script>
+            </td>
+            <td align="right" valign="baseline">
+              <script language=windchill>
+                <!--
+                outputViewSelector
+                -->
+              </script>
+            </td>
+          </tr>
+        </table>
+
+       <script language=windchill>comment text="This call initializes the state of the section in session context if it has not yet been displayed in the current user session"</script>
+       <script language=windchill>
+       <!--
+         initializeSection sectionName=TableInfo initialState=expand
+       -->
+       </script>
+
+       <script language=windchill>comment text="This call displays the header for section with the appropriate expand/collapse icon and link depending on the current state of the section"</script>
+       <script language=windchill>
+       <!--
+         processSubTemplate action=ExpandCollapseHeader sectionName=TableInfo titleResourceClass=com.ptc.windchill.enterprise.part.structure.processorsResource titleResourceKey=PRODUCT_STRUCTURE_LABEL helpAction=ProdStructureTable
+       -->
+       </script>
+
+       <table width="100%" border="0" cellspacing="0" cellpadding="0" background="<script language=Windchill>useProcessorService method=getImgHREF resourceName=sp.gif service=com.ptc.core.HTMLtemplateutil.server.processors.UtilProcessorService</script>" >
+         <Form action="<script language=Windchill><!-- getCurrentUrl --></script>" method="post" name="PartStructureInformationBody">
+           <tr>
+             <!-- the next two cells are required for all section bodies -->
+             <td><img src="<script language=Windchill>useProcessorService method=getImgHREF resourceName=sp.gif service=com.ptc.core.HTMLtemplateutil.server.processors.UtilProcessorService</script>" width="10" height="1"/></td>
+             <td class = "sdwLine" width="1"><img src="<script language=Windchill>useProcessorService method=getImgHREF resourceName=sp.gif service=com.ptc.core.HTMLtemplateutil.server.processors.UtilProcessorService</script>"/></td>
+             <td>
+               <table  id="ProductStructureTable" width="100%" cellspacing="0" cellpadding="0"><tr><td>
+                  <script language=windchill>comment text="The columns supplierPreference, organizationUniqueIdentifier and referenceDesignator that follow may be removed by the template processor when not needed"</script>
+                  <SCRIPT LANGUAGE=Windchill> <!--
+                    initializeTreeTable
+                    tableService action=setHeaderFromResource columnName=name RESOURCEBUNDLE=wt.part.partResource RESOURCEKEY=NAME
+                    tableService action=setHeaderFromResource columnName=number RESOURCEBUNDLE=wt.part.partResource RESOURCEKEY=NUMBER
+                    tableService action=setHeaderFromResource columnName=supplierPreference RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=SUPPLIER_STATUS
+                    tableService action=setHeaderFromResource columnName=designationSet RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=DESIGNATION_SET
+                    tableService action=setHeaderFromResource columnName=minmaxWarning RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=BLANK_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=actions RESOURCEBUNDLE=com.ptc.core.HTMLtemplateutil.server.processors.processorsResource RESOURCEKEY=ACTIONS
+                    tableService action=setHeaderFromResource columnName=iterationDisplayIdentifier RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=VERSION
+                    tableService action=setHeaderFromResource columnName=state RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=LIFE_CYCLE
+                    tableService action=setHeaderFromResource columnName=quantity RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=QUANTITY
+                    tableService action=setHeaderFromResource columnName=traceCode RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=TRACE_CODE_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=lineNumber RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=LINE_NUMBER_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=organizationUniqueIdentifier RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=ORGANIZATION_IDENTIFIER
+                    tableService action=setHeaderFromResource columnName=containerName RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=CONTEXT
+                    tableService action=setHeaderFromResource columnName=referenceDesignator RESOURCEBUNDLE=com.ptc.core.HTMLtemplateutil.server.processors.processorsResource RESOURCEKEY=REFERENCE_DESIGNATOR
+                    tableService action=setHeaderFromResource columnName=findNumber RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=FIND_NUMBER_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=inclusionOption RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=COMPONENT_OPTION_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=quantityOption RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=QUANTITY_OPTION_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=authoringApplication RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=AUTHORING_APPLICATION_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=type RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=TYPE_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=partType RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=PART_TYPE_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=createTimestamp RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=CREATE_TIMESTAMP_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=creator RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=CREATOR_NAME_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=department RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=DEPARTMENT_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=missingDependents RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=MISSING_DEPENDENTS_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=description RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=DESCRIPTION_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=docType RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=DOCUMENT_TYPE_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=docSubType RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=DOCUMENT_SUBTYPE_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=CADName RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=CAD_NAME_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=genericType RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=GENERIC_TYPE_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=placeHolder RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=PLACEHOLDER_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=instance RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=INSTANCE_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=displayType RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=SOFT_TYPE_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=modifyTimestamp RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=MODIFY_TIMESTAMP_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=versionDisplayIdentifier RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=VERSION_IDENTIFIER_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=source RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=SOURCE_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=title RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=TITLE_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=defaultUnit RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=DEFAULT_UNIT_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=modifier RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=MODIFIER_NAME_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=partInstance RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=PART_INSTANCE_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=lifeCycleName RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=LIFE_CYCLE_TEMPLATE_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=locker RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=CHECKED_OUT_BY_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=defaultTraceCode RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=DEFAULT_TRACE_CODE_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=format RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=FORMAT_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=ownership RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=OWNER_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=ownerApplication RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=OWNER_APPLICATION_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=viewName RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=VIEW_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=replacementType RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=REPLACEMENT_TYPE_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=plannedIncorporation RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=ESTIMATED_INCORPORATION_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=incorporated RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=START_INCORPORATION_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=unIncorporated RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=END_INCORPORATION_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=statusFamily_Change                RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=BLANK_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=statusFamily_General RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=BLANK_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=statusFamily_Share RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=BLANK_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=statusFamily_Note RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=BLANK_COLUMN_LABEL                    
+                    tableService action=setHeaderFromResource columnName=statusFamily_Replacement RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=BLANK_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=formatIcon RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=BLANK_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=statusFamily_DocStructure RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=BLANK_COLUMN_LABEL
+                    tableService action=setHeaderFromResource columnName=location RESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource RESOURCEKEY=LOCATION
+                    tableService action=setCellComponent NAME=formatIcon CELLCOMPONENT=com.ptc.windchill.enterprise.part.structure.FormatIconCellComponent
+                    tableService action=setCellComponent NAME=referenceDesignator CELLCOMPONENT=com.ptc.windchill.enterprise.part.structure.OccurrencesCellComponent
+                    tableService action=setCellComponent NAME=supplierPreference CELLCOMPONENT=com.ptc.windchill.enterprise.part.structure.SupplierPreferenceCellComponent
+                    tableService action=setCellComponent NAME=designationSet CELLCOMPONENT=com.ptc.windchill.enterprise.part.structure.DesignationSetCellComponent
+                    tableService action=setCellComponent NAME=minmaxWarning CELLCOMPONENT=com.ptc.windchill.enterprise.part.structure.MinMaxWarningCellComponent
+                    tableService action=setCellComponent NAME=organizationUniqueIdentifier CELLCOMPONENT=com.ptc.windchill.enterprise.object.structure.OrganizationIdentifierCellComponent
+                    tableService action=setCellComponent NAME=replacementType CELLCOMPONENT=com.ptc.windchill.enterprise.part.structure.ReplacementTypeCellComponent
+                    tableService action=setCellComponent NAME=statusFamily_Change CELLCOMPONENT=com.ptc.windchill.enterprise.part.structure.PendingChangeCellComponent
+                    tableService action=setCellComponent NAME=statusFamily_General CELLCOMPONENT=com.ptc.windchill.enterprise.object.structure.GeneralStatusCellComponent
+                    tableService action=setCellComponent NAME=statusFamily_Share CELLCOMPONENT=com.ptc.windchill.enterprise.object.structure.ShareStatusCellComponent
+                    tableService action=setCellComponent NAME=statusFamily_Replacement CELLCOMPONENT=com.ptc.windchill.enterprise.part.structure.ReplacementStatusCellComponent
+                    tableService action=setCellComponent NAME=statusFamily_Note CELLCOMPONENT=com.ptc.windchill.enterprise.part.structure.NoteStatusCellComponent
+                    tableService action=setCellComponent NAME=statusFamily_DocStructure CELLCOMPONENT=com.ptc.windchill.enterprise.part.structure.DocumentStructureStatusCellComponent
+                    tableService action=setCellComponent NAME=partInstance CELLCOMPONENT=com.ptc.windchill.enterprise.part.structure.PartInstanceCellComponent
+                    tableService action=setColumnAttributes NAME=actions ALTERNATETABLEACTIONS=PARTSTRUCTURE_TABLEACTIONS
+                    tableService action=setColumnAttributes NAME=statusFamily_Change TOOLTIPRESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource TOOLTIPRESOURCEKEY=CHANGE_STATUS_COLUMN_TOOLTIP
+                    tableService action=setColumnAttributes NAME=statusFamily_General TOOLTIPRESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource TOOLTIPRESOURCEKEY=GENERAL_STATUS_COLUMN_TOOLTIP
+                    tableService action=setColumnAttributes NAME=statusFamily_Share TOOLTIPRESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource TOOLTIPRESOURCEKEY=SHARE_STATUS_COLUMN_TOOLTIP
+                    tableService action=setColumnAttributes NAME=statusFamily_Replacement TOOLTIPRESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource TOOLTIPRESOURCEKEY=REPLACEMENT_STATUS_COLUMN_TOOLTIP
+                    tableService action=setColumnAttributes NAME=statusFamily_Note TOOLTIPRESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource TOOLTIPRESOURCEKEY=NOTE_STATUS_COLUMN_TOOLTIP
+                    tableService action=setColumnAttributes NAME=statusFamily_DocStructure TOOLTIPRESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource TOOLTIPRESOURCEKEY=DOCUMENT_STRUCTURE_STATUS_COLUMN_TOOLTIP
+                    tableService action=setColumnAttributes NAME=minmaxWarning TOOLTIPRESOURCEBUNDLE=com.ptc.windchill.enterprise.part.structure.processorsResource TOOLTIPRESOURCEKEY=MIN_MAX_WARNING
+                    tableService action=setColumnAttributes COLUMNNUMBER=all td.ALIGN=left td.NOWRAP=true font.size=2
+                    tableService action=setHeaderAttributes name=ALL enableColumnCollapse=false
+                    tableService action=show
+                  -->
+                  </SCRIPT>
+
+                  <script language=windchill>
+                    getDistributionTargetsCookie
+                  </script>
+
+                  <script language=windchill>
+                    getBaselineCookie
+                  </script>
+
+                  <script language=windchill>
+                    getReturnURL
+                  </script>
+
+                  <input type="hidden" name="ActionSource" value="PartStructure">
+                  <input type="hidden" name="tableSelectionAction">
+              <input type="hidden" name="setView">
+                 </td></tr>
+               </table>
+             </td>
+             <!-- the next two cells are required for all section bodies -->
+             <td class = "sdwLine" width="1"><img src="<script language=Windchill>useProcessorService method=getImgHREF resourceName=sp.gif service=com.ptc.core.HTMLtemplateutil.server.processors.UtilProcessorService</script>"/></td>
+             <td><img src="<script language=Windchill>useProcessorService method=getImgHREF resourceName=sp.gif service=com.ptc.core.HTMLtemplateutil.server.processors.UtilProcessorService</script>" width="10" height="1"/></td>
+           </tr>
+         </Form>
+       </table>
+
+       <SCRIPT LANGUAGE=Windchill>
+         outputSupplierContextSelectorScript
+       </SCRIPT>
+
+       <script language=windchill>comment text="This call displays the standard footer if the section is expanded"</script>
+       <script language=windchill>
+       <!--
+         getFooter sectionName=TableInfo
+       -->
+       </script>
+
+       <BR><BR><BR><BR><BR><BR><BR>   <!-- Put some space at the bottom of the PSB so that the actions pop-up menu is always on the screen -->
+
+       <Form action="<script language=Windchill><!-- getCurrentUrl --></script>" method="post" name="LaunchVisualization">
+         <input type="hidden" name="config_spec" value="<script language=Windchill><!-- outputEncodedConfigSpec --></script>">
+       </Form>
+       <Form action="<script language=Windchill><!-- getCurrentUrl --></script>" method="post" name="popup">
+       </Form>
+       <Form action="<script language=Windchill>getURLProcessorLink method=URLTemplateAction</script>" method="post" target="occurrences_window" name="occurrences">
+         <input type="hidden" name="oid" value="Occurrences">
+         <input type="hidden" name="occurrence" value="Occurrences">
+         <input type="hidden" name="action" value="Occurrences">
+       </Form>
+       <Form action="<script language=Windchill>getURLProcessorLink method=invokeAction action=RemovePartDocAssociation recurse.oid="com.ptc.windchill.enterprise.part.structure.ProductStructureProcessor getContextPart"</script>" method="post" name="RemoveDocumentFromPart">
+         <input type="hidden" name="partOid">
+         <input type="hidden" name="docOid">
+       </Form>
+       <Form action="<script language=Windchill><!-- getCurrentUrl --></script>" method="post" name="RemoveESIAssociationFromPart">
+         <input type="hidden" name="tableSelectionAction">
+         <input type="hidden" name="partOid">
+         <input type="hidden" name="targetOid">
+       </Form>
+       <Form action="<script language=Windchill><!-- getCurrentUrl --></script>" method="post" name="selectedContextForm">
+         <input type="hidden" name="selectedContext">
+       </Form>
+
+       <!-- construct the form and javascript definition so ProductView can be launched with the correct config spec -->
+       <script language=windchill>
+         useProcessorService method=getVisualizationFormTag service=com.ptc.windchill.enterprise.part.structure.ProductStructureProcessor action=start
+       </script>
+       <input type="hidden" name="config_spec" value="<script language=Windchill><!-- outputEncodedConfigSpec --></script>">
+       <script language=windchill>
+         useProcessorService method=getVisualizationFormTag service=com.ptc.windchill.enterprise.part.structure.ProductStructureProcessor action=end
+       </script>
+       <script language=windchill>
+         useProcessorService method=getVisualNavigationFormTag service=com.ptc.windchill.enterprise.part.structure.ProductStructureProcessor action=start
+       </script>
+       <input type="hidden" name="config_spec" value="<script language=Windchill><!-- outputEncodedConfigSpec --></script>">
+       <script language=windchill>
+         useProcessorService method=getVisualNavigationFormTag service=com.ptc.windchill.enterprise.part.structure.ProductStructureProcessor action=end
+       </script>
+       <script language=windchill>
+         useProcessorService method=getVisualizationCreateRepFormTag service=com.ptc.windchill.enterprise.part.structure.ProductStructureProcessor action=start
+       </script>
+       <input type="hidden" name="config_spec" value="<script language=Windchill><!-- outputEncodedConfigSpec --></script>">
+       <script language=windchill>
+         useProcessorService method=getVisualizationCreateRepFormTag service=com.ptc.windchill.enterprise.part.structure.ProductStructureProcessor action=end
+       </script>
+
+       <script language=windchill>useProcessorService method=getAdditionalMessages service=com.ptc.core.HTMLtemplateutil.server.processors.UtilProcessorService</script>
+
+       <Form action="<script language=Windchill><!-- getCurrentUrl --></script>" method="post" name="collapse">
+         <input type="hidden" name="collapse" value="dummy">
+       </Form>
+
+       <Form action="<script language=Windchill><!-- getCurrentUrl --></script>" method="post" name="sortby">
+         <input type="hidden" name="sortby" value="dummy">
+       </Form>
+
+       <Form action="<script language=Windchill><!-- getCurrentUrl --></script>" method="post" name="treeNode">
+         <input type="hidden" name="treeNode" value="dummy">
+         <input type="hidden" name="identity" value="dummy">
+       </Form>
+     </td>
+   </tr>
+ </table>
+
+<script language=javascript>
+<!--
+
+//ProductStructureSection scripts
+
+function goTo(pick)
+{
+   var selection;
+   for (var i = 0; i < pick.options.length; i++) {
+    if (pick.options[i].selected) {
+     selection = pick.options[i].value;
+     break;
+    }
+   }
+   location.href = selection;
+}
+
+function addReferences(){
+  resultsWindow = openNewWindow("<SCRIPT LANGUAGE=Windchill>getURLProcessorLinkForObj fullyQualified=true method=generateForm action=AssociateDocumentsToPart query=22 linkclass=wt.part.WTPartDescribeLink</SCRIPT>","_blank", "resizable=yes,scrollbars=yes,menubar=yes,toolbar=yes,location=yes,status=yes,height=470,width=640");
+}
+
+function openNewWindow(URL){
+  resultsWindow = wfWindowOpen(URL,"_blank", "resizable=yes,scrollbars=yes,menubar=yes,toolbar=yes,location=yes,status=yes,height=470,width=640");
+}
+function refreshForAssociation(newOid, oldOid)
+{
+  document.forms[0].action='<SCRIPT language=Windchill>getURLProcessorLinkForObj fullyQualified=true action=ProductStructure</SCRIPT>';
+
+  document.forms[0].method='post';
+  document.forms[0].submit();
+}
+
+//PartStructure scripts
+
+function submitForm () {
+
+  document.ReportSelector.submit();
+}
+
+function closeChild()
+{
+  if (this.configwindow && this.configwindow.open && !this.configwindow.closed) this.configwindow.wfWindowClose();
+}
+
+//PartStructureInformationBody scripts
+
+var whichDetailsPage = "product";
+var contextPart = "<SCRIPT LANGUAGE=Windchill>getContextPart</SCRIPT>";
+
+function searchWindowComplete(ufid)
+{
+   var selectedform = window.document.forms.selectedContextForm;
+   selectedform.selectedContext.value=ufid;
+   selectedform.submit();
+}
+
+function submitTableSelectionAction( action )
+{
+   var cform = window.document.forms.PartStructureInformationBody;
+
+   if (action == "UpdateDistributionTargets"){
+      cform.action='<script language=windchill>getURLProcessorLink method=processForm action=UpdateDistributionTargets class=wt.fc.WTObject </script>';
+    }else if (action == "AddToBaseline") {
+      cform.action='<script language=windchill>getURLProcessorLinkForObj method=processForm action=AddToBaseline  </script>';
+   }
+   cform.tableSelectionAction.value=action;
+   cform.submit();
+}
+function launchWindowForMultiSelectAction( newURL, winName, props ) {
+   if( newURL.indexOf("selected_oids") >= 0 || isSomethingChecked() ) {
+      //launch the action if any checkboxes are selected
+      submitFormToNewWindow( newURL, winName, props, "PartStructureInformationBody" );
+   } else {
+      //popup an alert "nothing selected... "
+      var NO_OBJ_SELECTED_MSG = '<script language=Windchill> getLocalizedMessage unicodeEscaped=true newLine=false resourceKey=NO_OBJ_SELECTED_MSG resourceClass=com.ptc.windchill.cadx.ws.wsResource</script>';
+      wfalert_gen( NO_OBJ_SELECTED_MSG );
+   }
+}
+
+function isSomethingChecked()
+{
+
+   var sels = document.getElementsByTagName('input');
+   if (sels) {
+      var alength = sels.length;
+      for (var i=0; i<alength; i++) {
+         if (sels[i].checked){
+            return true;
+         }
+      }
+   }
+   return false;
+}
+
+function launchVisualization( visURL, visName )
+{
+   var opts = "toolbar=0,location=0,directory=0,status=0,menubar=0,scrollbars=1,resizable=1,width=250,height=200";
+   var newwin = wfWindowOpen( visURL , visName, opts);
+   newwin.focus();
+}
+function popup( popURL, popName, popOpts )
+{
+   var newwin = wfWindowOpen( popURL , popName, popOpts);
+   if ( newwin != null ) newwin.focus();
+}
+function goToPage( oid, action, occurrence ) {
+   var cform = window.document.forms.occurrences;
+   cform.oid.value=oid;
+   cform.action.value=action;
+   cform.occurrence.value=occurrence;
+   wfWindowOpen("",'occurrences_window','width=600,height=550,directories=no,location=no,menubar=no,scrollbars=yes,status=yes,toolbar=no,resizable=yes');
+   cform.submit();
+}
+function associateDocuments(action) {
+   resultsWindow = wfWindowOpen(action,"_blank","resizable=yes,scrollbars=yes,menubar=yes,toolbar=yes,location=yes,status=yes,height=590,width=640");
+}
+function openNewWindow(URL){
+  resultsWindow = wfWindowOpen(URL,"_blank", "resizable=yes,scrollbars=yes,menubar=yes,toolbar=yes,location=yes,status=yes,height=470,width=640");
+}
+function removeDocumentFromPart(part, doc){
+   var cform = window.document.forms.RemoveDocumentFromPart;
+   cform.partOid.value=part;
+   cform.docOid.value=doc;
+   cform.submit();
+}
+function removeESIAssociationFromPart(part, target){
+   var cform = window.document.forms.RemoveESIAssociationFromPart;
+   cform.tableSelectionAction.value="RemoveESIAssociationFromPart";
+   cform.partOid.value=part;
+   cform.targetOid.value=target;
+   cform.submit();
+}
+function submitColumnCollapse( action )
+{
+   var cform = window.document.forms.collapse;
+   cform.collapse.value=action;
+   cform.submit();
+}
+function submitColumnSort( action )
+{
+   var cform = window.document.forms.sortby;
+   cform.sortby.value=action;
+   cform.submit();
+}
+function submitTreeNode( action, identity )
+{
+   var cform = window.document.forms.treeNode;
+   cform.treeNode.value=action;
+   cform.identity.value=identity;
+   cform.submit();
+}
+function launchOnTopWindow(action)
+{
+ //if (self != top)
+   //{
+       //top.location.href = action;
+	   parent.location = action;
+   //}
+}
+function refreshPSB() {
+	window.location.reload(true);
+}
+-->
+</script>
+<script language=JavaScript>
+    window.name = "mainwindow";
+
+    function viewPartUsageAttributesWindow(URL){
+     resultsWindow = wfWindowOpen(URL,"_blank", "resizable=yes,scrollbars=yes,menubar=yes,toolbar=yes,location=yes,status=yes,height=470,width=840");
+   }
+</script>
+<script language=JavaScript>
+    getSelectedItems = getSelectedItems.wrap(
+           function(proceed) {
+               var soid = proceed();
+	           if (soid == null || soid.length <=0) {
+	              // try to get the template processor items
+	               soid =  window.document.forms.PartStructureInformationBody.elements;
+	           }
+	       return soid;
+      });
+</script>
+
+<script language=windchill>
+<!--
+   processSubTemplate action=ExpandCollapseForm
+-->
+</script>
+</body>
+</html>
