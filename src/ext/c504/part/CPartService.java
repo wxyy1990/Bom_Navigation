@@ -18,14 +18,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import wt.doc.WTDocument;
+import wt.fc.ObjectReference;
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.fc.ReferenceFactory;
+import wt.fc.WTObject;
 import wt.httpgw.URLFactory;
 import wt.inf.container.WTContainer;
 import wt.inf.container.WTContainerHelper;
 import wt.method.RemoteAccess;
 import wt.method.RemoteMethodServer;
+import wt.org.WTPrincipal;
 import wt.part.WTPart;
 import wt.part.WTPartHelper;
 import wt.part.WTPartMaster;
@@ -33,12 +37,16 @@ import wt.pdmlink.PDMLinkProduct;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.query.WhereExpression;
+import wt.servlet.ServletState;
 import wt.session.SessionHelper;
 import wt.session.SessionServerHelper;
 import wt.type.ClientTypedUtility;
 import wt.util.WTException;
 import wt.vc.VersionControlHelper;
 import wt.vc.config.LatestConfigSpec;
+import wt.vc.wip.WorkInProgressException;
+import wt.vc.wip.WorkInProgressHelper;
+import wt.vc.wip.Workable;
 
 import com.bjsasc.platform.webframework.tag.util.JsonUtil;
 import com.cascc.avidm.docman.model.DmFile;
@@ -49,6 +57,9 @@ import com.cascc.avidm.servicelocator.web.ServiceLocator;
 import com.cascc.avidm.sysadm.model.ProductModel;
 import com.cascc.avidm.sysadm.web.SAProductCrtMgrCaller;
 import com.cascc.platform.aa.org.ejb20.UserFactory;
+import com.ptc.netmarkets.model.NmOid;
+import com.ptc.netmarkets.util.beans.NmURLFactoryBean;
+import com.ptc.netmarkets.util.misc.NetmarketURL;
 
 import ext.avidm.AvidmUtil;
 import ext.avidm.IBAConstants;
@@ -86,7 +97,7 @@ public class CPartService implements RemoteAccess{
         	
         	
         	String sql="delete from SelectedPDMLinkProductInfo where userName='"+userName+"'";
-        	Debug.P("==>sql:"+sql);
+        	//Debug.P("==>sql:"+sql);
 			excuteQuery(sql);
         	
         	SessionServerHelper.manager.setAccessEnforced(enforce);
@@ -110,7 +121,7 @@ public class CPartService implements RemoteAccess{
 						new Class[]{String.class}, new Object[]{sessionID});
 			
 		}else{
-			  Debug.P("==>sessionID:"+sessionID);
+			  //Debug.P("==>sessionID:"+sessionID);
 			  ServiceLocator loc = ServiceLocator.getInstance();
 			 
 			  PAOrgMgrHome homePAOrg = (PAOrgMgrHome)loc.getRemoteHome("PAOrgMgr", PAOrgMgrHome.class);
@@ -119,31 +130,32 @@ public class CPartService implements RemoteAccess{
 			  
 			  UserFactory userFactory = UserFactory.getInstance();
 			  String userInnerID = userFactory.convertIDtoInnerID(SessionHelper.manager.getPrincipal().getName());
-			  Debug.P("==>userId:"+userInnerID);
+			  //Debug.P("==>userId:"+userInnerID);
 			 
 			  Vector vecAllPrjs = beanPAOrg.getUserProducts(sessionID,userInnerID);
 			
 	//			  SAProductCrtMgrHome homePrj = (SAProductCrtMgrHome)loc.getRemoteHome("SAProductCrtMgr", SAProductCrtMgrHome.class);
 	//			  SAProductCrtMgr beanPrj = homePrj.create();
 	//			  Vector vecAllPrjs = beanPrj.getAllProducts();
-			  Debug.P("===>vecAllPrjs:"+vecAllPrjs.size());
+			  //Debug.P("===>vecAllPrjs:"+vecAllPrjs.size());
 
 	
 			List list  = new ArrayList();
 			for(int i =0 ;i<vecAllPrjs.size();i++){
 				ProductModel m = (ProductModel)vecAllPrjs.get(i);
-				Map map = new HashMap();
-				map.put("PRODTYPE",m.sPType);
-				map.put("PRODIID",m.sIID);
-				map.put("PRODID",m.sId);
-//				if(m.sPName.equals("国家标准件库")){
-//					continue;
-//				}
 				
-				map.put("PRODNAME",m.sPName);
-				String display = m.sId+"("+m.sPName+")";
-				map.put("DISPLAY",display);
-				list.add(map);
+				WTContainer container=AvidmUtil.getContainerByProductiid(m.sIID);
+				if(container instanceof PDMLinkProduct){
+					Map map = new HashMap();
+					map.put("PRODTYPE",m.sPType);
+					map.put("PRODIID",m.sIID);
+					map.put("PRODID",m.sId);
+					
+					map.put("PRODNAME",m.sPName);
+					String display = m.sId+"("+m.sPName+")";
+					map.put("DISPLAY",display);
+					list.add(map);
+				}
 			}
 			return JsonUtil.listToJson(list.size(), list);
 		}
@@ -166,15 +178,15 @@ public class CPartService implements RemoteAccess{
 			com.ptc.netmarkets.model.NmOid nmOid = (com.ptc.netmarkets.model.NmOid)oidList.get(i);
 			String oid = (String)nmOid.toString();
 			Object docObj=Util.getObjByOid(oid);
-			Debug.P("===>docObj:"+docObj);
+			//Debug.P("===>docObj:"+docObj);
 			
 			if(docObj instanceof WTDocument){
 				WTDocument doc=(WTDocument)docObj;
 				IBAUtil ibaUtil = new IBAUtil(doc);
 				String productIID = ibaUtil.getIBAValue(IBAConstants.PRODUCTIID);
 				String versionIID = ibaUtil.getIBAValue(IBAConstants.VERSIONIID);
-				Debug.P("===>productIID:"+productIID);
-				Debug.P("===>versionIID:"+versionIID);
+				//Debug.P("===>productIID:"+productIID);
+				//Debug.P("===>versionIID:"+versionIID);
 				
 //				String documentIID = ibaUtil.getIBAValue(IBAConstants.DOCUMENTIID);
 //				DmDocument dmDocument = docman.getDocument(productIID, documentIID, "");
@@ -199,7 +211,7 @@ public class CPartService implements RemoteAccess{
 //					hashMap.put(doc.getNumber(), applicationdata);
 //				}
 			}
-			Debug.P("===>resultList:"+resultList);
+			//Debug.P("===>resultList:"+resultList);
 		}
 		return resultList;
 	}	
@@ -215,42 +227,51 @@ public class CPartService implements RemoteAccess{
         	 
         	String userName=SessionHelper.manager.getPrincipal().getName();
         	boolean enforce = SessionServerHelper.manager.setAccessEnforced(false); 
-        	Debug.P("==>userName:"+userName+"node:"+node+"===id:"+oid);
+        	//Debug.P("==>userName:"+userName+"node:"+node+"===id:"+oid);
         	
       		URLFactory uf = new URLFactory();
       		String hostURL = uf.getBaseHREF();
       		
       		JSONArray returnArray=new JSONArray();
       		if(node.equals("root")){
+      			//先获取数据库中已有数据
+      			ArrayList<String> dataList=new ArrayList<String>();
+      			ResultSet rs1 = excuteQueryForSearch("select * from SelectedPDMLinkProductInfo where userName='"+userName+"'");
+  				while(rs1.next()){
+  					String pdId=rs1.getString("pdID");
+  					
+  					JSONObject product=getPDJsObj(hostURL,pdId,rs1.getString("pdXH"),rs1.getString("pdName"));
+  					returnArray.put(product);
+  					
+  					dataList.add(pdId);
+  				}
+  				
       			//如果是从父页面选择过来的 ，ID非空
       			if(oid==null||oid.equals("null")){
-      				ResultSet rs1 = excuteQueryForSearch("select * from SelectedPDMLinkProductInfo where userName='"+userName+"'");
-      				while(rs1.next()){
-      					JSONObject product=getPDJsObj(hostURL,rs1.getString("pdID"),rs1.getString("pdXH"),rs1.getString("pdName"));
-      					returnArray.put(product);
-      				}
       				return returnArray.toString();
       			}else{
       				dbUtil = new DBConnectionUtil();
       				//删除所有记录
-      				String sql="delete from SelectedPDMLinkProductInfo where userName='"+userName+"'";
-      				dbUtil.executeQuery(sql);
+//      				String sql="delete from SelectedPDMLinkProductInfo where userName='"+userName+"'";
+//      				dbUtil.executeQuery(sql);
       				
       				SAProductCrtMgrCaller caller = new SAProductCrtMgrCaller();
           			String result[]=oid.split(";");
           			for(int i=0;i<result.length;i++){
           				String siid=result[i];
-          				Debug.P("===>siid:"+siid);
+          				//Debug.P("===>siid:"+siid);
           				if("".equals(siid)){
           					continue;
           				}
           				ProductModel  m = caller.getProduct(siid);
-          				
-          				JSONObject product=getPDJsObj(hostURL,m.sIID,m.sId,m.sPName);
-          				if(product.length()!=0){
-          					saveSelecedInfo(m.sIID,m.sPName,m.sId,userName);
-              				returnArray.put(product);
+          				if(!dataList.contains(m.sIID)){
+          					JSONObject product=getPDJsObj(hostURL,m.sIID,m.sId,m.sPName);
+	          				if(product.length()!=0){
+	          					saveSelecedInfo(m.sIID,m.sPName,m.sId,userName);
+	              				returnArray.put(product);
+	          				}
           				}
+//          				
           			}//end for
           			
           			dbUtil.commit();
@@ -260,12 +281,12 @@ public class CPartService implements RemoteAccess{
       		}else{
       			WTPart part=(WTPart)Util.getObjByOid(node);
       			QueryResult qr = WTPartHelper.service.getUsesWTParts(part, new LatestConfigSpec());
-      			Debug.P("=======part:"+part.getNumber()+"==qr.size()"+qr.size());
+      			//Debug.P("=======part:"+part.getNumber()+"==qr.size()"+qr.size());
       			while(qr.hasMoreElements()){
       				Persistable[] obj = (Persistable[]) qr.nextElement();
       	            WTPart childPart = (WTPart) obj[1];
 		  	        String type=getPartType(childPart);
-		            Debug.P("===>type:"+type);
+		            //Debug.P("===>type:"+type);
 		            if(type.equalsIgnoreCase(IBATYPE_STANDARDPART)){
 		                 continue;
 		            }
@@ -287,7 +308,7 @@ public class CPartService implements RemoteAccess{
 			if(container instanceof PDMLinkProduct){
 				 product.put("id", xdh);
 				PDMLinkProduct pdmProduct = (PDMLinkProduct)container;
-				Debug.P("===>pdmProduct:"+pdmProduct);
+				//Debug.P("===>pdmProduct:"+pdmProduct);
 				JSONArray sub= new JSONArray();
 				if(pdmProduct!=null){
 					sub=getPartByContainer(pdmProduct,hostURL);
@@ -305,15 +326,24 @@ public class CPartService implements RemoteAccess{
 			return product;
 	}
 	
+	//数据库中已经存在返回真，负责返回假
 	public static void saveSelecedInfo(String pdID,String pdName,String xdh,String userName) throws Exception{
-		ResultSet rs1 = excuteQueryForSearch("select SEQ_SELECTEDPDINFO.nextval from dual");
-		int num=0;
-		if(rs1.next())
-			num=rs1.getInt(1);
-		
-		String sql = "INSERT INTO SelectedPDMLinkProductInfo VALUES ('"+num+"','"+pdID+"','"+pdName+"','"+xdh+"','"+userName+"')";
-		Debug.P("===>sql:"+sql);
-		dbUtil.executeQuery(sql);
+//		ResultSet rs = excuteQueryForSearch("select count(*) from SelectedPDMLinkProductInfo where pdID='"+pdID+"' and userName='"+userName+"'");
+//		int value=0;
+//		if(rs.next()){
+//			value=rs.getInt(1);
+//		}
+//		//Debug.P("===>count:"+value);
+//		if(value==0){
+			ResultSet rs1 = excuteQueryForSearch("select SEQ_SELECTEDPDINFO.nextval from dual");
+			int num=0;
+			if(rs1.next())
+				num=rs1.getInt(1);
+			
+			String sql = "INSERT INTO SelectedPDMLinkProductInfo VALUES ('"+num+"','"+pdID+"','"+pdName+"','"+xdh+"','"+userName+"')";
+			//Debug.P("===>sql:"+sql);
+			dbUtil.executeQuery(sql);
+//		}
 	}
 	
 	/**
@@ -332,7 +362,7 @@ public class CPartService implements RemoteAccess{
 		obj.put("id", partOid);
 		String value=subTypeMap.get(type);
 		
-		Debug.P("===&&&&&&&&>type:"+type+"===value:"+value);
+		//Debug.P("===&&&&&&&&>type:"+type+"===value:"+value);
 		String showName="";
 		if(value!=null){
 			showName=part.getNumber()+SPLIT_CHAR+part.getName()+SPLIT_CHAR+value;
@@ -345,16 +375,19 @@ public class CPartService implements RemoteAccess{
 			showName=showName+SPLIT_CHAR+phase;
 		}
 		obj.put("text", showName);
-		obj.put("url", hostURL + "servlet/TypeBasedIncludeServlet?u8=1&oid=" + partOid );
+		
+		obj.put("url", getCheckoutPartId(hostURL,part,partOid));
+		
+//		obj.put("url", hostURL + "servlet/TypeBasedIncludeServlet?u8=1&oid=" + partOid );
 		
 		return obj;
 	}
 	
 	public static String getPartType(WTPart part) throws RemoteException, WTException{
 		String docType = ClientTypedUtility.getExternalTypeIdentifier(part);
-		Debug.P("docType-------------->" + docType);
+		//Debug.P("docType-------------->" + docType);
 		docType=docType.substring(docType.lastIndexOf(".")+1, docType.length());
-		Debug.P("docType-------------->" + docType);
+		//Debug.P("docType-------------->" + docType);
 		
 		return docType;
 	}
@@ -369,13 +402,13 @@ public class CPartService implements RemoteAccess{
 	 */
 	public static Boolean getSubPart(WTPart part) throws WTException, RemoteException{
 		QueryResult qr = WTPartHelper.service.getUsesWTParts(part, new LatestConfigSpec());
-		Debug.P("=======part:"+part.getNumber()+"==qr.size()"+qr.size());
+		//Debug.P("=======part:"+part.getNumber()+"==qr.size()"+qr.size());
 		boolean exsit=false;
 		while(qr.hasMoreElements()){
 			Persistable[] obj = (Persistable[]) qr.nextElement();
             WTPart childPart = (WTPart) obj[1];
             String type=getPartType(childPart);
-            Debug.P("===>type:"+type);
+            //Debug.P("===>type:"+type);
             if(!type.equalsIgnoreCase(IBATYPE_STANDARDPART)){
             	exsit=true;
             	break;
@@ -390,7 +423,7 @@ public class CPartService implements RemoteAccess{
             JSONArray jsonArray = new JSONArray();
            
         	 WTPart mPart=getPartByNumber(xdh+"-M", false);
-        	 Debug.P("===>mPart:"+mPart);
+        	 //Debug.P("===>mPart:"+mPart);
 			 if(mPart!=null){
 				JSONObject jsObj=getXDHPartJsonNode(hostURL,mPart);
 				jsObj.put("leaf",!getSubPart(mPart));
@@ -398,7 +431,7 @@ public class CPartService implements RemoteAccess{
 			}
 			 
 			 WTPart cPart=getPartByNumber(xdh+"-C", false);
-			 Debug.P("===>cPart:"+cPart);
+			 //Debug.P("===>cPart:"+cPart);
 			 if(cPart!=null){
 				JSONObject jsObj=getXDHPartJsonNode(hostURL,cPart);
 				jsObj.put("leaf",!getSubPart(cPart));
@@ -406,7 +439,7 @@ public class CPartService implements RemoteAccess{
 			}
 			 
 			 WTPart cjPart=getPartByNumber(xdh+"-C-J", false);
-			 Debug.P("===>cjPart:"+cjPart);
+			 //Debug.P("===>cjPart:"+cjPart);
 			 if(cjPart!=null){
 				JSONObject jsObj=getXDHPartJsonNode(hostURL,cjPart);
 				jsObj.put("leaf",!getSubPart(cjPart));
@@ -414,7 +447,7 @@ public class CPartService implements RemoteAccess{
 			}
 			 
 			 WTPart zPart=getPartByNumber(xdh+"-Z", false);
-			 Debug.P("===>zPart:"+zPart);
+			 //Debug.P("===>zPart:"+zPart);
 			 if(zPart!=null){
 				JSONObject jsObj=getXDHPartJsonNode(hostURL,zPart);
 				jsObj.put("leaf",!getSubPart(zPart));
@@ -424,16 +457,44 @@ public class CPartService implements RemoteAccess{
 			return 	jsonArray;
 	}
 	
-	public static JSONObject getXDHPartJsonNode(String hostURL,WTPart part) throws JSONException{
+	public static JSONObject getXDHPartJsonNode(String hostURL,WTPart part) throws JSONException, WorkInProgressException, WTException{
 		JSONObject obj=new JSONObject();
 		
 		String partOid=Util.getOid(part);
 		obj.put("id", partOid);
 		obj.put("text", part.getNumber()+SPLIT_CHAR+part.getName());
-		obj.put("url", hostURL + "servlet/TypeBasedIncludeServlet?u8=1&oid=" + partOid );
+		obj.put("url",  getCheckoutPartId(hostURL,part,partOid) );
 		
 		return obj;
 	}
+	
+	
+	public static String getCheckoutPartId(String hostURL,WTPart part,String partOid) throws WorkInProgressException, WTException{
+		if(WorkInProgressHelper.isCheckedOut(part)){
+			WTPart prePart=part;
+			if(WorkInProgressHelper.isWorkingCopy(part)==true){
+				prePart=(WTPart)WorkInProgressHelper.service.originalCopyOf(part);
+			}
+			
+			return hostURL +"servlet/TypeBasedIncludeServlet?bomDetails=Y&u8=1&oid=" + getOid(prePart);		
+		 }else{
+			return hostURL +"servlet/TypeBasedIncludeServlet?bomDetails=Y&u8=1&oid=" + partOid;
+		}
+	}
+	
+	
+	public static String getOid(WTPart part) throws WTException{
+    	String oid ="";
+    	wt.fc.ReferenceFactory rf = new ReferenceFactory();
+    	ObjectReference or=ObjectReference.newObjectReference(part);
+    	try {
+			oid = rf.getReferenceString(or);
+		} catch (WTException e) {
+			e.printStackTrace();
+		}
+    	return oid;
+    }
+	
 	
 	public static WTPart getPartByNumber(String number, boolean accessControlled) throws WTException {
         WTPart part = null;
@@ -465,7 +526,7 @@ public class CPartService implements RemoteAccess{
 		qs.appendAnd();
 		qs.appendWhere(where);
 		
-		Debug.P("===>qs:"+qs);
+		//Debug.P("===>qs:"+qs);
 		
 		// 执行查询
 		QueryResult qr = PersistenceHelper.manager.find(qs);
@@ -473,11 +534,11 @@ public class CPartService implements RemoteAccess{
 		// 获取最新大版本
 		qr = GenericUtil.getLatestRevisionForEachView(qr);
 
-		Debug.P("===>qr.size():"+qr.size());
+		//Debug.P("===>qr.size():"+qr.size());
 		while(qr.hasMoreElements()){
 //			Persistable[] ps = (Persistable[])qr.nextElement();
 			WTPart part = (WTPart)qr.nextElement();
-			Debug.P("===>partVersion:"+part.getNumber()+"==>partVersion:"+part.getVersionIdentifier().getValue());
+			//Debug.P("===>partVersion:"+part.getNumber()+"==>partVersion:"+part.getVersionIdentifier().getValue());
 		}
 	}
 	
@@ -498,7 +559,7 @@ public class CPartService implements RemoteAccess{
 		qs.appendAnd();
 		qs.appendWhere(where);
 		
-		Debug.P("===>qs:"+qs);
+		//Debug.P("===>qs:"+qs);
 		
 		// 执行查询
 		QueryResult qr = PersistenceHelper.manager.find(qs);
@@ -506,14 +567,14 @@ public class CPartService implements RemoteAccess{
 		// 获取最新大版本
 		qr = GenericUtil.getLatestRevisionForEachView(qr);
 
-		Debug.P("===>qr.size():"+qr.size());
+		//Debug.P("===>qr.size():"+qr.size());
 		while(qr.hasMoreElements()){
 //			Persistable[] ps = (Persistable[])qr.nextElement();
 			WTPart part = (WTPart)qr.nextElement();
 			if(!getPartType(part).equals(IBATYPE_MODELPART)){
 				continue;
 			}
-			Debug.P("===>partVersion:"+part.getNumber()+"==>partVersion:"+part.getVersionIdentifier().getValue());
+			//Debug.P("===>partVersion:"+part.getNumber()+"==>partVersion:"+part.getVersionIdentifier().getValue());
 			JSONObject jsObj=getXDHPartJsonNode(hostURL,part);
 			jsObj.put("leaf",!getSubPart(part));
 			jsObj.put("icon","images/prod.gif");
